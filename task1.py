@@ -9,7 +9,7 @@ class Student:
         self.tests_taken="No tests taken"
     def take_test(self,paper,list_of_answers):
         if len(list_of_answers)!=len(paper.markscheme):
-            return print("Give all answers!")
+            raise ValueError
         differences=0
         for i in range(len(list_of_answers)):
             if list_of_answers[i]!=paper.markscheme[i]:
