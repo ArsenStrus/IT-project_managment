@@ -20,3 +20,5 @@ class Student:
         if isinstance(self.tests_taken, str):
             self.tests_taken=dict()
         self.tests_taken[paper.subject] = f"Passed! ({result}%)" if result >= passing_score_int else f"Failed! ({result}%)"
+
+print("Hello World")
