@@ -21,4 +21,23 @@ jobs:
           pip install pytest
 
       - name: Run tests
+        id: run_tests
         run: pytest --maxfail=1 --disable-warnings
+
+      - name: Create revert branch if tests fail
+        if: failure()
+        run: |
+          git checkout -b revert-${{ github.sha }}
+          git revert -m 1 ${{ github.sha }}
+          git push origin revert-${{ github.sha }}
+
+      - name: Create pull request to revert commit
+        if: failure()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --title "Revert failed commit ${{ github.sha }}" \
+            --body "Tests failed, automatically suggesting a revert." \
+            --base main \
+            --head revert-${{ github.sha }}
