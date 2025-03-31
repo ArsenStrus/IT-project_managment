@@ -24,14 +24,12 @@ jobs:
         id: run_tests
         run: pytest --maxfail=1 --disable-warnings
 
-      - name: Set up Git user (local config for repo)
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
 
       - name: Create revert branch if tests fail
         if: failure()
         run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
           git checkout -b revert-${{ github.sha }}
           git revert -m 1 ${{ github.sha }}
           git push origin revert-${{ github.sha }}
