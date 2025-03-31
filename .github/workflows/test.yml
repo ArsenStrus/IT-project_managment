@@ -30,20 +30,19 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-           # Створюємо нову гілку для відкату
+          # Отримуємо останній успішний коміт перед поточним
+          LAST_COMMIT=$(git rev-parse HEAD^)
+
+          # Створюємо нову гілку для відкату
           git checkout -b revert-${{ github.sha }}
           
-          # Отримуємо хеш останнього успішного коміту або коміту до злиття
-          git log --oneline
+          # Відкатуємо зміни до останнього успішного коміту
+          git reset --hard $LAST_COMMIT
 
-          # Відкатуємо зміни до конкретного коміту, використовуючи хеш
-          git reset --hard <commit_hash>  # Заміни <commit_hash> на реальний хеш
-
-          # Додаємо зміни і робимо коміт
-          git add .
-          git commit -m "Revert commit due to failed tests"
+          # Робимо коміт для відкату
+          git commit --allow-empty -m "Revert commit due to failed tests"
           
-          # Пушимо нову гілку
+          # Пушимо зміни у відкатну гілку
           git push origin revert-${{ github.sha }}
 
 
