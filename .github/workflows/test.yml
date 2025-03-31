@@ -30,8 +30,17 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
+          # Створюємо нову гілку для відкату
           git checkout -b revert-${{ github.sha }}
-          git revert -m 1 ${{ github.sha }}
+          
+          # Відкатуємо зміни до попереднього коміту
+          git reset --hard HEAD~1  # Відкатуємо один коміт назад
+
+          # Додаємо зміни і робимо коміт
+          git add .
+          git commit -m "Revert commit due to failed tests"
+          
+          # Пушимо нову гілку
           git push origin revert-${{ github.sha }}
 
       - name: Create pull request to revert commit
