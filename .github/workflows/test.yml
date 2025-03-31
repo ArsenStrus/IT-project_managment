@@ -24,6 +24,11 @@ jobs:
         id: run_tests
         run: pytest --maxfail=1 --disable-warnings
 
+      - name: Set up Git user
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
       - name: Create revert branch if tests fail
         if: failure()
         run: |
